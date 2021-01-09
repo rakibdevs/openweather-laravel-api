@@ -1,5 +1,5 @@
 {
-    "name": "RakibDevs/openweather-laravel-api",
+    "name": "rakibdevs/openweather-laravel-api",
     "description": "Laravel package to connect https://openweathermap.org/ to get weather data for any location on the globe immediately",
     "keywords": ["laravel","weather","open-weather","api"],
     "license": "MIT",
