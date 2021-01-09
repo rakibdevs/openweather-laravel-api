@@ -18,7 +18,7 @@ Install the package through [Composer](http://getcomposer.org).
 On the command line:
 
 ```
-
+composer require rakibdevs/openweather-laravel-api
 
 ```
 
