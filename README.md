@@ -39,12 +39,11 @@ Add the following to your `providers` array in `config/app.php`:
 ```php
 'providers' => [
     // ...
-
     RakibDevs\Weather\WeatherServiceProvider::class,
 ],
 'aliases' => [
-	//...
-	'Weather' => RakibDevs\Weather\Weather::class,	
+    //...
+    'Weather' => RakibDevs\Weather\Weather::class,	
 ];
 
 
@@ -56,10 +55,10 @@ Publish the required package configuration file using the artisan command:
 	$ php artisan vendor:publish
 ```
 Edit the `config/openweather.php` file and modify the `api_key` value with your Open Weather Map api key.
-```
+```php
 	return [
-	    'api_key' 			=> 'ae9f7b6a0cfc2563ec1d24f3c267ad42',
-	    'lang' 				=> 'en',
+	    'api_key' 	        => 'ae9f7b6a0cfc2563ec1d24f3c267ad42',
+	    'lang' 		=> 'en',
 	    'date_format'       => 'm/d/Y',
 	    'time_format'       => 'h:i A',
 	    'day_format'        => 'l',
