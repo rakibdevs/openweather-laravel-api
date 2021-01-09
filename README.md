@@ -1,8 +1,8 @@
 ## Laravel [Open Weather](https://openweathermap.org/) API
-
+   Laravel OpenWeather API (openweather-laravel-api) is a Laravel package to connect Open Weather Map APIs ( https://openweathermap.org/api ) and access free API services easily.
 
 ## Supported APIs
-| Operation | English Input | 
+| APIs | Get data by | 
 | --- | --- |
 | [Current Weather](https://openweathermap.org/current) | By city name, city ID, geographic coordinates, ZIP code |
 | [One Call API](https://openweathermap.org/api/one-call-api) | By geographic coordinates|
@@ -166,6 +166,49 @@ $info = $wt->get3HourlyByZip('94040,us');  // If no country code specified, us w
 $info = $wt->get3HourlyByCord(23.7104, 90.4074);
 
 ```
+
+### [5 Day Historical](https://openweathermap.org/api/one-call-api#history) 
+Get access to historical weather data for the previous 5 days.
+
+```php
+
+// By coordinates : latitude, longitude and date
+$info = $wt->getHistoryByCord(23.7104, 90.4074, '2020-01-09');
+
+```
+
+### [Air Pollution](https://openweathermap.org/api/one-call-api#history) 
+Air Pollution API provides current, forecast and historical air pollution data for any coordinates on the globe
+
+Besides basic Air Quality Index, the API returns data about polluting gases, such as Carbon monoxide (CO), Nitrogen monoxide (NO), Nitrogen dioxide (NO2), Ozone (O3), Sulphur dioxide (SO2), Ammonia (NH3), and particulates (PM2.5 and PM10).
+
+Air pollution forecast is available for 5 days with hourly granularity. Historical data is accessible from 27th November 2020.
+
+```php
+
+// By coordinates : latitude, longitude and date
+$info = $wt->getAirPollutionByCord(23.7104, 90.4074);
+
+```
+
+### [Geocoding API](https://openweathermap.org/api/one-call-api#history) 
+Geocoding API is a simple tool that we have developed to ease the search for locations while working with geographic names and coordinates.
+-> Direct geocoding converts the specified name of a location or area into the exact geographical coordinates;
+-> Reverse geocoding converts the geographical coordinates into the names of the nearby locations.
+
+```php
+// By city name
+$info = $wt->getGeoByCity('dhaka');
+
+// By coordinates : latitude, longitude and date
+$info = $wt->getGeoByCity(23.7104, 90.4074);
+
+```
+
+### [Free API Limitations](https://openweathermap.org/api/one-call-api#history) 
+- 60 calls/minute 
+- 1,000,000 calls/month
+- 1000 calls/day when using Onecall requests
 
 
 
