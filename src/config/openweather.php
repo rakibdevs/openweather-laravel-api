@@ -7,7 +7,7 @@ return [
      *
      */
 
-    'api_key' 			=> 'ae9f7b6a0cfc2563ec1d24f3c267ad42',
+    'api_key'  => '', // get an API key
     
 
     /**
