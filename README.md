@@ -2,7 +2,7 @@
 
 
 ## Supported APIs
-| Operation | English Input | |
+| Operation | English Input | 
 | --- | --- |
 | [Current Weather](https://openweathermap.org/current) | By city name, city ID, geographic coordinates, ZIP code |
 | [One Call API](https://openweathermap.org/api/one-call-api) | By geographic coordinates|
