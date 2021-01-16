@@ -12,7 +12,7 @@ namespace RakibDevs\Weather;
  * @since    2021-01-09
  */
 
-use RakibDevs\Weather\Src\Exceptions\WeatherException;
+use RakibDevs\Weather\Exceptions\WeatherException;
 use Illuminate\Support\Facades\Config;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
