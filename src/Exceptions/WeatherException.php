@@ -1,5 +1,5 @@
 <?php
-namespace RakibDevs\Weather\Src\Exceptions;
+namespace RakibDevs\Weather\Exceptions;
 
 use Exception;
 
