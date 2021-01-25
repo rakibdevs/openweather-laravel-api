@@ -3,9 +3,9 @@ namespace RakibDevs\Weather\Exceptions;
 
 use Exception;
 
-class WeatherException extends \Exception
+class WeatherException extends Exception
 {
-	private $e;
+    private $e;
 
     public function __construct($e){
         $this->e = $e;
