@@ -7,7 +7,7 @@
 [![GitHub license](https://img.shields.io/github/license/rakibdevs/openweather-laravel-api)](https://github.com/rakibdevs/openweather-laravel-api/blob/master/LICENSE)
 [![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fpackagist.org%2Fpackages%2Frakibdevs%2Fopenweather-laravel-api)]
 
- Laravel OpenWeather API (openweather-laravel-api) is a Laravel package to connect Open Weather Map APIs ( https://openweathermap.org/api ) and access free API services easily.
+ Laravel OpenWeather API (openweather-laravel-api) is a Laravel package to connect Open Weather Map APIs ( https://openweathermap.org/api ) and access free API services (current weather, weather forecast, weather history) easily.
 
 ## Supported APIs
 | APIs | Get data by | 
