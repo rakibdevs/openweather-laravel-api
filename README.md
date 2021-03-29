@@ -5,7 +5,6 @@
 [![GitHub forks](https://img.shields.io/github/forks/rakibdevs/openweather-laravel-api)](https://github.com/rakibdevs/openweather-laravel-api/network)
 [![GitHub issues](https://img.shields.io/github/issues/rakibdevs/openweather-laravel-api)](https://github.com/rakibdevs/openweather-laravel-api/issues)
 [![GitHub license](https://img.shields.io/github/license/rakibdevs/openweather-laravel-api)](https://github.com/rakibdevs/openweather-laravel-api/blob/master/LICENSE)
-[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fpackagist.org%2Fpackages%2Frakibdevs%2Fopenweather-laravel-api)]
 
  Laravel OpenWeather API (openweather-laravel-api) is a Laravel package to connect Open Weather Map APIs ( https://openweathermap.org/api ) and access free API services (current weather, weather forecast, weather history) easily.
 
@@ -101,48 +100,48 @@ $info = $wt->getCurrentByCord(23.7104, 90.4074);
 
 #### Output:
 ```
-{#294 ▼
-  +"coord": {#296 ▼
-    +"lon": 90.4074
-    +"lat": 23.7104
+{
+  "coord": {
+    "lon": 90.4074
+    "lat": 23.7104
   }
-  +"weather": array:1 [▼
-    0 => {#280 ▼
-      +"id": 721
-      +"main": "Haze"
-      +"description": "haze"
-      +"icon": "50d"
+  "weather":[
+    0 => { 
+      "id": 721
+      "main": "Haze"
+      "description": "haze"
+      "icon": "50d"
     }
   ]
-  +"base": "stations"
-  +"main": {#290 ▼
-    +"temp": 26
-    +"feels_like": 25.42
-    +"temp_min": 26
-    +"temp_max": 26
-    +"pressure": 1009
-    +"humidity": 57
+  "base": "stations"
+  "main": {
+    "temp": 26
+    "feels_like": 25.42
+    "temp_min": 26
+    "temp_max": 26
+    "pressure": 1009
+    "humidity": 57
   }
-  +"visibility": 3500
-  +"wind": {#284 ▼
-    +"speed": 4.12
-    +"deg": 280
+  "visibility": 3500
+  "wind": {
+    "speed": 4.12
+    "deg": 280
   }
-  +"clouds": {#283 ▼
-    +"all": 85
+  "clouds": {
+    "all": 85
   }
-  +"dt": "01/09/2021 04:16 PM"
-  +"sys": {#281 ▼
-    +"type": 1
-    +"id": 9145
-    +"country": "BD"
-    +"sunrise": "01/09/2021 06:42 AM"
-    +"sunset": "01/09/2021 05:28 PM"
+  "dt": "01/09/2021 04:16 PM"
+  "sys": {
+    "type": 1
+    "id": 9145
+    "country": "BD"
+    "sunrise": "01/09/2021 06:42 AM"
+    "sunset": "01/09/2021 05:28 PM"
   }
-  +"timezone": 21600
-  +"id": 1185241
-  +"name": "Dhaka"
-  +"cod": 200
+  "timezone": 21600
+  "id": 1185241
+  "name": "Dhaka"
+  "cod": 200
 }
 
 ```
