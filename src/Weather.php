@@ -2,7 +2,6 @@
 
 namespace RakibDevs\Weather;
 
-
 /**
  * Laravel OpenWeather API (openweather-laravel-api) is a Laravel package to connect Open Weather Map APIs ( https://openweathermap.org/api ) and access free API services easily.
  *
@@ -12,60 +11,60 @@ namespace RakibDevs\Weather;
  * @since    2021-01-09
  */
 
-use RakibDevs\Weather\Exceptions\WeatherException;
-use Illuminate\Support\Facades\Config;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\TooManyRedirectsException;
+use Illuminate\Support\Facades\Config;
+use RakibDevs\Weather\Exceptions\WeatherException;
 
 class Weather
 {
     /**
-     * base endpoint : https://api.openweathermap.org/data/2.5/. 
+     * base endpoint : https://api.openweathermap.org/data/2.5/.
      *
      * @var string
      */
 
-    protected $url          = 'https://api.openweathermap.org/data/2.5/';
+    protected $url = 'https://api.openweathermap.org/data/2.5/';
 
     /**
-     * current weather api endpoint : https://api.openweathermap.org/data/2.5/weather. 
+     * current weather api endpoint : https://api.openweathermap.org/data/2.5/weather.
      * See documentation : https://openweathermap.org/current.
-     * 
+     *
      * @var string
      */
 
-    protected $current      = 'weather?';
+    protected $current = 'weather?';
 
     /**
-     * onecall api endpoint : https://api.openweathermap.org/data/2.5/onecall. 
+     * onecall api endpoint : https://api.openweathermap.org/data/2.5/onecall.
      * See documentation : https://openweathermap.org/api/one-call-api
-     * 
+     *
      * @var string
      */
 
-    protected $one_call     = 'onecall?';
+    protected $one_call = 'onecall?';
 
     /**
-     * hourly forecast 5 Days 3 hour api endpoint : https://api.openweathermap.org/data/2.5/forecast. 
+     * hourly forecast 5 Days 3 hour api endpoint : https://api.openweathermap.org/data/2.5/forecast.
      * See documentation : https://openweathermap.org/forecast5.
      *
      * @var string
      */
 
-    protected $forecast     = 'forecast?';
+    protected $forecast = 'forecast?';
 
     /**
-     * last 5 Days history api endpoint : https://api.openweathermap.org/data/2.5/onecall/timemachine. 
+     * last 5 Days history api endpoint : https://api.openweathermap.org/data/2.5/onecall/timemachine.
      * See documentation : https://openweathermap.org/api/one-call-api#history
      *
      * @var string
      */
 
-    protected $historical   = 'onecall/timemachine?';
+    protected $historical = 'onecall/timemachine?';
 
     /**
      * air pollution api endpoint : https://api.openweathermap.org/data/2.5/air_pollution.
@@ -74,7 +73,7 @@ class Weather
      * @var string
      */
 
-    protected $air_pollution= 'air_pollution?';
+    protected $air_pollution = 'air_pollution?';
 
     protected $client;
 
@@ -85,7 +84,7 @@ class Weather
      * @var string
      */
 
-    protected $geo_api_url  = 'http://api.openweathermap.org/geo/1.0/';
+    protected $geo_api_url = 'http://api.openweathermap.org/geo/1.0/';
 
     protected $geo_client;
 
@@ -98,12 +97,12 @@ class Weather
     protected $api_key;
 
     /**
-     * temp_format available strings are c, f, k. 
+     * temp_format available strings are c, f, k.
      *
      * @var string
      */
 
-    protected $temp_format; 
+    protected $temp_format;
 
     protected $dt_format;
 
@@ -118,7 +117,7 @@ class Weather
     protected $uom;
 
     /**
-     * Units: available units are c, f, k. 
+     * Units: available units are c, f, k.
      *
      * For temperature in Fahrenheit (f) and wind speed in miles/hour, use units=imperial
      * For temperature in Celsius (c) and wind speed in meter/sec, use units=metric
@@ -129,7 +128,7 @@ class Weather
     protected $units = [
         'c' => 'metric',
         'f' => 'imperial',
-        'k' => 'standard'
+        'k' => 'standard',
     ];
 
 
@@ -138,23 +137,22 @@ class Weather
     {
         $this->client = new Client([
             'base_uri' => $this->url,
-            'timeout'  => 10.0,
+            'timeout' => 10.0,
         ]);
 
         $this->geo_client = new Client([
             'base_uri' => $this->geo_api_url,
-            'timeout'  => 10.0,
+            'timeout' => 10.0,
         ]);
 
-        $this->api_key          = Config::get('openweather.api_key');
-        $this->temp_format      = Config::get('openweather.temp_format','k');
-        $this->date_format      = Config::get('openweather.date_format','m/d/Y');
-        $this->time_format      = Config::get('openweather.time_format','h:i A');
-        $this->day_format       = Config::get('openweather.day_format','l');
-        $this->lang             = Config::get('openweather.lang','en');
-        $this->dt_format        = $this->date_format.' '.$this->time_format;
-        $this->uom              = $this->units[$this->temp_format];
-
+        $this->api_key = Config::get('openweather.api_key');
+        $this->temp_format = Config::get('openweather.temp_format', 'k');
+        $this->date_format = Config::get('openweather.date_format', 'm/d/Y');
+        $this->time_format = Config::get('openweather.time_format', 'h:i A');
+        $this->day_format = Config::get('openweather.day_format', 'l');
+        $this->lang = Config::get('openweather.lang', 'en');
+        $this->dt_format = $this->date_format.' '.$this->time_format;
+        $this->uom = $this->units[$this->temp_format];
     }
 
     /**
@@ -180,7 +178,7 @@ class Weather
     {
         $params['appid'] = $this->api_key;
         $params['units'] = $this->uom;
-        $params['lang']  = $this->lang;
+        $params['lang'] = $this->lang;
 
         return http_build_query($params);
     }
@@ -191,27 +189,26 @@ class Weather
      * documentation : https://openweathermap.org/current.
      *
      * @param array $query
-     * 
+     *
      */
 
 
     private function getCurrent(array $query)
     {
-        try{
+        try {
             $response = $this->client->request('GET', $this->current.$this->buildParams($query));
-            if($response->getStatusCode() == 200){
+            if ($response->getStatusCode() == 200) {
                 $res = json_decode($response->getBody()->getContents());
-                $tz  = $res->timezone;
+                $tz = $res->timezone;
                
                 // modify date in given format
                 $res->sys->sunrise = $this->dt($res->sys->sunrise, $tz);
-                $res->sys->sunset  = $this->dt($res->sys->sunset, $tz);
-                $res->dt           = $this->dt($res->dt, $tz);
+                $res->sys->sunset = $this->dt($res->sys->sunset, $tz);
+                $res->dt = $this->dt($res->dt, $tz);
                 
                 return $res;
             }
-        } 
-        catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
+        } catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
             throw new WeatherException($e);
         }
     }
@@ -221,24 +218,23 @@ class Weather
      * documentation : https://openweathermap.org/api/one-call-api.
      *
      * @param array $query
-     * 
+     *
      */
 
     private function getOneCall(array $query)
     {
-        try{
+        try {
             $response = $this->client->request('GET', $this->one_call.$this->buildParams($query));
 
-            if($response->getStatusCode() == 200){
-
+            if ($response->getStatusCode() == 200) {
                 $res = json_decode($response->getBody()->getContents());
-                $tz  = $res->timezone_offset;
+                $tz = $res->timezone_offset;
 
                 // modify date of current data
 
                 $res->current->sunrise = $this->dt($res->current->sunrise, $tz);
-                $res->current->sunset  = $this->dt($res->current->sunset, $tz);
-                $res->current->dt      = $this->dt($res->current->dt, $tz);
+                $res->current->sunset = $this->dt($res->current->sunset, $tz);
+                $res->current->dt = $this->dt($res->current->dt, $tz);
 
                 // modify date of minutely data
 
@@ -255,15 +251,14 @@ class Weather
                 // modify date of daily data
 
                 foreach ($res->daily as $key => $val) {
-                    $res->daily[$key]->dt      = $this->dt($val->dt, $tz);
+                    $res->daily[$key]->dt = $this->dt($val->dt, $tz);
                     $res->daily[$key]->sunrise = $this->dt($val->sunrise, $tz);
-                    $res->daily[$key]->sunset  = $this->dt($val->sunset, $tz);
+                    $res->daily[$key]->sunset = $this->dt($val->sunset, $tz);
                 }
                 
                 return $res;
             }
-        } 
-        catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
+        } catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
             throw new WeatherException($e);
         }
     }
@@ -273,32 +268,30 @@ class Weather
      * documentation : https://openweathermap.org/forecast5.
      *
      * @param array $query
-     * 
+     *
      */
 
     private function get3Hourly(array $query)
     {
-        try{
+        try {
             $response = $this->client->request('GET', $this->forecast.$this->buildParams($query));
-            if($response->getStatusCode() == 200){
+            if ($response->getStatusCode() == 200) {
                 $res = json_decode($response->getBody()->getContents());
-                $tz  = $res->city->timezone;
+                $tz = $res->city->timezone;
                
                 // modify date in given format
                 $res->city->sunrise = $this->dt($res->city->sunrise, $tz);
-                $res->city->sunset  = $this->dt($res->city->sunset, $tz);
+                $res->city->sunset = $this->dt($res->city->sunset, $tz);
 
                 // modify date of list data
 
                 foreach ($res->list as $key => $val) {
-                    $res->list[$key]->dt      = $this->dt($val->dt, $tz);
+                    $res->list[$key]->dt = $this->dt($val->dt, $tz);
                 }
                 
                 return $res;
             }
-         
-        } 
-        catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
+        } catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
             throw new WeatherException($e);
         }
     }
@@ -308,25 +301,25 @@ class Weather
      * documentation : https://openweathermap.org/api/one-call-api#history.
      *
      * @param array $query
-     * 
+     *
      */
 
     private function getHistorical(array $query)
     {
-        try{
+        try {
             $response = $this->client->request('GET', $this->historical.$this->buildParams($query));
 
 
-            if($response->getStatusCode() == 200){
+            if ($response->getStatusCode() == 200) {
                 $res = json_decode($response->getBody()->getContents());
 
-                $tz  = $res->timezone_offset;
+                $tz = $res->timezone_offset;
                
                 // modify date of current data
 
                 $res->current->sunrise = $this->dt($res->current->sunrise, $tz);
-                $res->current->sunset  = $this->dt($res->current->sunset, $tz);
-                $res->current->dt      = $this->dt($res->current->dt, $tz);
+                $res->current->sunset = $this->dt($res->current->sunset, $tz);
+                $res->current->dt = $this->dt($res->current->dt, $tz);
 
                 // modify date of hourly data
 
@@ -336,9 +329,7 @@ class Weather
                 
                 return $res;
             }
-         
-        } 
-        catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
+        } catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
             throw new WeatherException($e);
         }
     }
@@ -353,15 +344,15 @@ class Weather
      * documentation : https://openweathermap.org/api/air-pollution.
      *
      * @param array $query
-     * 
+     *
      */
 
     private function getAirPollution(array $query)
     {
-        try{
+        try {
             $response = $this->client->request('GET', $this->air_pollution.$this->buildParams($query));
 
-            if($response->getStatusCode() == 200){
+            if ($response->getStatusCode() == 200) {
                 $res = json_decode($response->getBody()->getContents());
 
                 // modify date of list data
@@ -372,9 +363,7 @@ class Weather
                 
                 return $res;
             }
-         
-        } 
-        catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
+        } catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
             throw new WeatherException($e);
         }
     }
@@ -385,15 +374,15 @@ class Weather
      * documentation : https://openweathermap.org/api/geocoding-api.
      *
      * @param array $query
-     * 
+     *
      */
 
     private function getGeo(string $type, array $query)
     {
-        try{
+        try {
             $response = $this->geo_client->request('GET', $type.$this->buildParams($query));
 
-            if($response->getStatusCode() == 200){
+            if ($response->getStatusCode() == 200) {
                 $res = json_decode($response->getBody()->getContents());
 
                 return $res;
@@ -405,9 +394,7 @@ class Weather
                 
                 return $res;
             }
-         
-        } 
-        catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
+        } catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
             throw new WeatherException($e);
         }
     }
@@ -415,10 +402,11 @@ class Weather
 
     public function getCurrentByCity(string $city)
     {
-        if(!is_numeric($city))
-            $params['q']  = $city;
-        else
+        if (! is_numeric($city)) {
+            $params['q'] = $city;
+        } else {
             $params['id'] = $city;
+        }
 
         return $this->getCurrent($params);
     }
@@ -432,19 +420,20 @@ class Weather
     }
 
     public function getCurrentByZip(string $zip, string $country = 'us')
-    { 
+    {
         return $this->getCurrent([
-            'zip'     => $zip,
+            'zip' => $zip,
             'country' => $country,
         ]);
     }
 
     public function getCurrentTempByCity(string $city)
     {
-        if(!is_numeric($city))
-            $params['q']  = $city;
-        else
+        if (! is_numeric($city)) {
+            $params['q'] = $city;
+        } else {
             $params['id'] = $city;
+        }
 
         return $this->getCurrent($params)->main;
     }
@@ -459,10 +448,11 @@ class Weather
 
     public function get3HourlyByCity(string $city)
     {
-        if(!is_numeric($city))
-            $params['q']  = $city;
-        else
+        if (! is_numeric($city)) {
+            $params['q'] = $city;
+        } else {
             $params['id'] = $city;
+        }
 
         return $this->get3Hourly($params);
     }
@@ -470,7 +460,7 @@ class Weather
     public function get3HourlyByZip(string $zip, string $country = 'us')
     {
         return $this->get3Hourly([
-            'zip'     => $zip,
+            'zip' => $zip,
             'country' => $country,
         ]);
     }
@@ -495,32 +485,33 @@ class Weather
     public function getAirPollutionByCord(string $lat, string $lon, string $start = null, string $end = null)
     {
         return $this->getAirPollution([
-            'lat'   => $lat,
-            'lon'   => $lon,
+            'lat' => $lat,
+            'lon' => $lon,
             'start' => $start != null? strtotime($start):$start,
-            'end'   => $end != null? strtotime($end):$end,
+            'end' => $end != null? strtotime($end):$end,
         ]);
     }
 
     public function getGeoByCity(string $city, string  $limit = null)
     {
-        $params['q'] = $city; 
-        if($limit) 
+        $params['q'] = $city;
+        if ($limit) {
             $params['limit'] = $limit;
+        }
 
-        return $this->getGeo('direct?',$params);
+        return $this->getGeo('direct?', $params);
     }
 
     public function getGeoByCord(string $lat, string $lon, string $limit = null)
     {
         $params = [
             'lat' => $lat,
-            'lon' => $lon
+            'lon' => $lon,
         ];
-        if($limit) 
+        if ($limit) {
             $params['limit'] = $limit;
+        }
 
-        return $this->getGeo('reverse?',$params);
+        return $this->getGeo('reverse?', $params);
     }
-
 }

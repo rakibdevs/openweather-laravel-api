@@ -2,35 +2,35 @@
 
 return [
 
-	/**
+    /**
      * Get a free Open Weather Map API key : https://openweathermap.org/price.
      *
      */
 
-    'api_key'  => '', // get an API key
+    'api_key' => '', // get an API key
     
 
     /**
-     * 
+     *
      * Library https://openweathermap.org/current#multi
      *  af - Afrikaans
-		al - Albanian
-		ar - Arabic
-		az - Azerbaijani
-		bg - Bulgarian
-		............
-		more availabe language 
+        al - Albanian
+        ar - Arabic
+        az - Azerbaijani
+        bg - Bulgarian
+        ............
+        more availabe language
      *
      */
 
-	'lang' 				=> 'en',
+    'lang' => 'en',
 
-    'date_format'       => 'm/d/Y',
-    'time_format'       => 'h:i A',
-    'day_format'        => 'l',
+    'date_format' => 'm/d/Y',
+    'time_format' => 'h:i A',
+    'day_format' => 'l',
 
     /**
-     * Units: available units are c, f, k. 
+     * Units: available units are c, f, k.
      *
      * For temperature in Fahrenheit (f) and wind speed in miles/hour, use units=imperial
      * For temperature in Celsius (c) and wind speed in meter/sec, use units=metric
@@ -38,7 +38,5 @@ return [
      *
      */
 
-    'temp_format'       => 'c'
+    'temp_format' => 'c',
 ];
-
-?>
