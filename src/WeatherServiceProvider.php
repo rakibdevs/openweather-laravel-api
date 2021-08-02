@@ -3,6 +3,7 @@
 namespace RakibDevs\Weather;
 
 use Illuminate\Support\ServiceProvider;
+use RakibDevs\Weather\Weather;
 
 class WeatherServiceProvider extends ServiceProvider
 {
@@ -13,10 +14,7 @@ class WeatherServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make('RakibDevs\Weather\Weather');
-        $this->publishes([
-            __DIR__ . '/config/openweather.php' => config_path('openweather.php'),
-        ]);
+        $this->app->make(Weather::class);
     }
 
     /**
@@ -26,6 +24,8 @@ class WeatherServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->publishes([
+            __DIR__ . '/config/openweather.php' => config_path('openweather.php'),
+        ]);
     }
 }
