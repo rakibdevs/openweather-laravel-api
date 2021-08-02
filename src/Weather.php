@@ -13,11 +13,10 @@ namespace RakibDevs\Weather;
 
 use Illuminate\Support\Facades\Config;
 use RakibDevs\Weather\Exceptions\InvalidConfiguration;
-use RakibDevs\Weather\Exceptions\WeatherException;
 
 class Weather
 {
-       /**
+    /**
      * current weather api endpoint : https://api.openweathermap.org/data/2.5/weather.
      * See documentation : https://openweathermap.org/current.
      *
@@ -93,13 +92,13 @@ class Weather
     public function __construct()
     {
         self::setApi();
-        self::setConfigParameters();   
+        self::setConfigParameters();
     }
 
     protected function setApi()
     {
         $this->api_key = config('openweather.api_key');
-        if($this->api_key == ''){
+        if ($this->api_key == '') {
             throw InvalidConfiguration::apiKeyNotSpecified();
         }
     }
@@ -142,6 +141,7 @@ class Weather
     {
         $route = $this->current.$this->params($query);
         $data = (new WeatherClient)->client()->fetch($route);
+
         return (new WeatherFormat($this->format))->formatCurrent($data);
     }
 
@@ -157,6 +157,7 @@ class Weather
     {
         $route = $this->one_call.$this->params($query);
         $data = (new WeatherClient)->client()->fetch($route);
+
         return (new WeatherFormat($this->format))->formatOneCall($data);
     }
 
@@ -172,6 +173,7 @@ class Weather
     {
         $route = $this->forecast.$this->params($query);
         $data = (new WeatherClient)->client()->fetch($route);
+
         return (new WeatherFormat($this->format))->format3Hourly($data);
     }
 
@@ -187,6 +189,7 @@ class Weather
     {
         $route = $this->historical.$this->params($query);
         $data = (new WeatherClient)->client()->fetch($route);
+
         return (new WeatherFormat($this->format))->formatHistorical($data);
     }
 
@@ -207,6 +210,7 @@ class Weather
     {
         $route = $this->air_pollution.$this->params($query);
         $data = (new WeatherClient)->client()->fetch($route);
+
         return (new WeatherFormat($this->format))->formatHistorical($data);
     }
 
@@ -223,6 +227,7 @@ class Weather
     {
         $route = $type.$this->params($query);
         $data = (new WeatherClient)->client('geo')->fetch($route);
+
         return (new WeatherFormat($this->format))->formatGeo($data);
     }
     

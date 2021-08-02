@@ -3,7 +3,6 @@
 namespace RakibDevs\Weather;
 
 use Illuminate\Support\ServiceProvider;
-use RakibDevs\Weather\Weather;
 
 class WeatherServiceProvider extends ServiceProvider
 {
