@@ -59,7 +59,7 @@ class WeatherClient
                 return json_decode($response->getBody()->getContents());
             }
         } catch (ClientException | RequestException | ConnectException | ServerException | TooManyRedirectsException $e) {
-            throw new WeatherException($e);
+            throw new WeatherException($e->getMessage());
         }
 	}
 }
