@@ -4,7 +4,6 @@ namespace RakibDevs\Weather;
 
 class WeatherFormat
 {
-    
     protected $format;
 
     /**
@@ -16,7 +15,7 @@ class WeatherFormat
 
     public function __construct($format)
     {
-    	$this->format = $format;
+        $this->format = $format;
     }
 
     public function dt(string $timestamp, string $tz)
@@ -26,7 +25,7 @@ class WeatherFormat
 
     public function formatCurrent($res)
     {
-    	$tz = $res->timezone; 
+        $tz = $res->timezone;
         // modify date in given format
         $res->sys->sunrise = $this->dt($res->sys->sunrise, $tz);
         $res->sys->sunset = $this->dt($res->sys->sunset, $tz);
@@ -38,7 +37,7 @@ class WeatherFormat
 
     public function formatOneCall($res)
     {
-    	$tz = $res->timezone_offset;
+        $tz = $res->timezone_offset;
 
         // modify date of current data
 
@@ -71,7 +70,7 @@ class WeatherFormat
 
     public function format3Hourly($res)
     {
-    	$tz = $res->city->timezone;
+        $tz = $res->city->timezone;
        
         // modify date in given format
         $res->city->sunrise = $this->dt($res->city->sunrise, $tz);
@@ -88,7 +87,7 @@ class WeatherFormat
 
     public function formatHistorical($res)
     {
-    	$tz = $res->timezone_offset;
+        $tz = $res->timezone_offset;
                
         // modify date of current data
 
@@ -107,13 +106,11 @@ class WeatherFormat
 
     public function formatAirPollution($res)
     {
-    	foreach ($res->list as $key => $val) {
+        foreach ($res->list as $key => $val) {
             $res->list[$key]->dt = $this->dt($val->dt, 0);
         }
         
         return $res;
     }
-
-
 
 }
