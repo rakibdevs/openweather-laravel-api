@@ -222,8 +222,7 @@ class Weather
     private function getGeo(string $type, array $query)
     {
         $route = $type.$this->params($query);
-        $data = (new WeatherClient)->client('geo')->fetch($route);
-        return (new WeatherFormat($this->format))->formatGeo($data);
+        return (new WeatherClient)->client('geo')->fetch($route);
     }
     
 

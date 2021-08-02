@@ -114,14 +114,6 @@ class WeatherFormat
         return $res;
     }
 
-    public function formatGeo($res)
-    {
-    	foreach ($res->list as $key => $val) {
-            $res->list[$key]->dt = $this->dt($val->dt, 0);
-        }
-        
-        return $res;
-    }
 
 
 }

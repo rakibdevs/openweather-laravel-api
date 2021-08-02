@@ -45,7 +45,7 @@ class WeatherClient
 	{
 		$url = $type == 'geo'?$this->geo_api_url:$this->url;
         $this->service = new Client([
-            'base_uri' => $this->url,
+            'base_uri' => $url,
             'timeout' => 10.0,
         ]);
         return $this;
