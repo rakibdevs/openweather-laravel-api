@@ -1,6 +1,6 @@
 {
     "name": "rakibdevs/openweather-laravel-api",
-    "description": "Laravel package to connect https://openweathermap.org/ to get weather data for any location on the globe immediately",
+    "description": "Laravel package to connect https://openweathermap.org/ to get customized weather data for any location on the globe immediately",
     "keywords": ["laravel","weather","open-weather","api"],
     "license": "MIT",
     "authors": [
@@ -11,12 +11,21 @@
         }
     ],
     "require": {
-        "php": "^7.0|^8.0",
-        "guzzlehttp/guzzle": "^6.3.1|^7.0.1"
+        "php": "^7.2|^7.3|^7.4|^8.0",
+        "guzzlehttp/guzzle": "^6.3|^7.0"
+    },
+    "require-dev": {
+        "laravel/framework": "^6.0|^7.0|^8.0",
+        "phpunit/phpunit": "^8.0|^9.0"
     },
     "autoload": {
         "psr-4": {
             "RakibDevs\\Weather\\": "src"
+        }
+    },
+     "autoload-dev": {
+        "psr-4": {
+            "RakibDevs\\Weather\\Tests\\": "tests"
         }
     },
     "extra": {
