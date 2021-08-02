@@ -112,5 +112,4 @@ class WeatherFormat
         
         return $res;
     }
-
 }
