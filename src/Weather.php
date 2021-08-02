@@ -207,7 +207,7 @@ class Weather
     {
         $route = $this->air_pollution.$this->params($query);
         $data = (new WeatherClient)->client()->fetch($route);
-        return (new WeatherFormat($this->format))->formatHistorical($data);
+        return (new WeatherFormat($this->format))->formatAirPollution($data);
     }
 
 
