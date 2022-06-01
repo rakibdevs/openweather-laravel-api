@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\TooManyRedirectsException;
+use RakibDevs\Weather\Exceptions\InvalidConfiguration;
 use RakibDevs\Weather\Exceptions\WeatherException;
 
 class WeatherClient
@@ -68,7 +69,7 @@ class WeatherClient
     {
         $this->api_key = $this->config['api_key'];
         if ($this->api_key == '') {
-            throw InvalidConfiguration::apiKeyNotSpecified();
+            throw new InvalidConfiguration();
         }
     }
 

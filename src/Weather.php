@@ -11,9 +11,6 @@ namespace RakibDevs\Weather;
  * @since    2021-01-09
  */
 
-use Illuminate\Support\Facades\Config;
-use RakibDevs\Weather\Exceptions\InvalidConfiguration;
-
 class Weather
 {
     /**
