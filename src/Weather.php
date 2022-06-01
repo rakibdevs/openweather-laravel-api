@@ -160,7 +160,7 @@ class Weather
 
     public function getCurrentByCity(string $city)
     {
-        if (!is_numeric($city)) {
+        if (! is_numeric($city)) {
             $params['q'] = $city;
         } else {
             $params['id'] = $city;
@@ -187,7 +187,7 @@ class Weather
 
     public function getCurrentTempByCity(string $city)
     {
-        if (!is_numeric($city)) {
+        if (! is_numeric($city)) {
             $params['q'] = $city;
         } else {
             $params['id'] = $city;
@@ -206,7 +206,7 @@ class Weather
 
     public function get3HourlyByCity(string $city)
     {
-        if (!is_numeric($city)) {
+        if (! is_numeric($city)) {
             $params['q'] = $city;
         } else {
             $params['id'] = $city;

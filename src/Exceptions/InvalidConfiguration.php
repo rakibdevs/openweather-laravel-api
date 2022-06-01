@@ -25,7 +25,7 @@ class InvalidConfiguration extends Exception
     public function render($request)
     {
         return response([
-            'message' => 'Invalid API Key. Get a free Open Weather Map API key : https://openweathermap.org/price.'
+            'message' => 'Invalid API Key. Get a free Open Weather Map API key : https://openweathermap.org/price.',
         ]);
     }
 }
