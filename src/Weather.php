@@ -7,7 +7,7 @@ namespace RakibDevs\Weather;
  *
  * @package  openweather-laravel-api
  * @author   Md. Rakibul Islam <rakib1708@gmail.com>
- * @version  1.5
+ * @version  1.6
  * @since    2021-01-09
  */
 
@@ -67,67 +67,6 @@ class Weather
      */
 
 
-    protected $lang;
-
-    /**
-     * Units: available units are c, f, k.
-     *
-     * For temperature in Fahrenheit (f) and wind speed in miles/hour, use units=imperial
-     * For temperature in Celsius (c) and wind speed in meter/sec, use units=metric
-     * Temperature in Kelvin (k) and wind speed in meter/sec is used by default, so there is no need to use the units parameter in the API call if you want this
-     *
-     * @var array
-     */
-    protected $units = [
-        'c' => 'metric',
-        'f' => 'imperial',
-        'k' => 'standard',
-    ];
-
-    protected $uom;
-
-    protected $format;
- 
-
-    public function __construct()
-    {
-        self::setApi();
-        self::setConfigParameters();
-    }
-
-    protected function setApi()
-    {
-        $this->api_key = config('openweather.api_key');
-        if ($this->api_key == '') {
-            throw InvalidConfiguration::apiKeyNotSpecified();
-        }
-    }
-
-
-    protected function setConfigParameters()
-    {
-        $this->format = (object) config('openweather');
-        $this->format->dt_format = $this->format->date_format.' '.$this->format->time_format;
-        $this->uom = $this->units[$this->format->temp_format];
-    }
-
-    /**
-     * build query parameters.
-     *
-     * @param array $params
-     * @return string
-     */
-
-    private function params(array $params)
-    {
-        $params['appid'] = $this->api_key;
-        $params['units'] = $this->uom;
-        $params['lang'] = $this->format->lang;
-
-        return http_build_query($params);
-    }
-
-
     /**
      * Access current weather data for any location on Earth including over 200,000 cities! Open Weathe Map API collect and process weather data from different sources such as global and local weather models, satellites, radars and vast network of weather stations.
      * documentation : https://openweathermap.org/current.
@@ -139,8 +78,7 @@ class Weather
 
     private function getCurrent(array $query)
     {
-        $route = $this->current.$this->params($query);
-        $data = (new WeatherClient)->client()->fetch($route);
+        $data = (new WeatherClient)->client()->fetch($this->current, $query);
 
         return (new WeatherFormat($this->format))->formatCurrent($data);
     }
@@ -155,8 +93,7 @@ class Weather
 
     private function getOneCall(array $query)
     {
-        $route = $this->one_call.$this->params($query);
-        $data = (new WeatherClient)->client()->fetch($route);
+        $data = (new WeatherClient)->client()->fetch($this->one_call, $query);
 
         return (new WeatherFormat($this->format))->formatOneCall($data);
     }
@@ -171,8 +108,7 @@ class Weather
 
     private function get3Hourly(array $query)
     {
-        $route = $this->forecast.$this->params($query);
-        $data = (new WeatherClient)->client()->fetch($route);
+        $data = (new WeatherClient)->client()->fetch($this->forecast, $query);
 
         return (new WeatherFormat($this->format))->format3Hourly($data);
     }
@@ -187,19 +123,17 @@ class Weather
 
     private function getHistorical(array $query)
     {
-        $route = $this->historical.$this->params($query);
-        $data = (new WeatherClient)->client()->fetch($route);
+        $data = (new WeatherClient)->client()->fetch($this->historical, $query);
 
         return (new WeatherFormat($this->format))->formatHistorical($data);
     }
 
     /**
      * Air Pollution API concept
-       Air Pollution API provides current, forecast and historical air pollution data for any coordinates on the globe
-
-       Besides basic Air Quality Index, the API returns data about polluting gases, such as Carbon monoxide (CO), Nitrogen monoxide (NO), Nitrogen dioxide (NO2), Ozone (O3), Sulphur dioxide (SO2), Ammonia (NH3), and particulates (PM2.5 and PM10).
-
-       Air pollution forecast is available for 5 days with hourly granularity. Historical data is accessible from 27th November 2020
+     * Air Pollution API provides current, forecast and historical air pollution data for any coordinates on the globe
+     * Besides basic Air Quality Index, the API returns data about polluting gases, such as Carbon monoxide (CO), Nitrogen monoxide (NO),
+     * Nitrogen dioxide (NO2), Ozone (O3),Sulphur dioxide (SO2), Ammonia (NH3), and particulates (PM2.5 and PM10).
+     * Air pollution forecast is available for 5 days with hourly granularity.
      * documentation : https://openweathermap.org/api/air-pollution.
      *
      * @param array $query
@@ -208,8 +142,7 @@ class Weather
 
     private function getAirPollution(array $query)
     {
-        $route = $this->air_pollution.$this->params($query);
-        $data = (new WeatherClient)->client()->fetch($route);
+        $data = (new WeatherClient)->client()->fetch($this->air_pollution, $query);
 
         return (new WeatherFormat($this->format))->formatAirPollution($data);
     }
@@ -225,15 +158,13 @@ class Weather
 
     private function getGeo(string $type, array $query)
     {
-        $route = $type.$this->params($query);
-
-        return (new WeatherClient)->client('geo')->fetch($route);
+        return (new WeatherClient)->client('geo')->fetch($type, $query);
     }
-    
+
 
     public function getCurrentByCity(string $city)
     {
-        if (! is_numeric($city)) {
+        if (!is_numeric($city)) {
             $params['q'] = $city;
         } else {
             $params['id'] = $city;
@@ -260,7 +191,7 @@ class Weather
 
     public function getCurrentTempByCity(string $city)
     {
-        if (! is_numeric($city)) {
+        if (!is_numeric($city)) {
             $params['q'] = $city;
         } else {
             $params['id'] = $city;
@@ -279,7 +210,7 @@ class Weather
 
     public function get3HourlyByCity(string $city)
     {
-        if (! is_numeric($city)) {
+        if (!is_numeric($city)) {
             $params['q'] = $city;
         } else {
             $params['id'] = $city;
@@ -318,8 +249,8 @@ class Weather
         return $this->getAirPollution([
             'lat' => $lat,
             'lon' => $lon,
-            'start' => $start != null? strtotime($start):$start,
-            'end' => $end != null? strtotime($end):$end,
+            'start' => $start != null ? strtotime($start) : $start,
+            'end' => $end != null ? strtotime($end) : $end,
         ]);
     }
 
