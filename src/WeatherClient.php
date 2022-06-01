@@ -40,8 +40,6 @@ class WeatherClient
 
     protected $service;
 
-    protected $lang;
-
     /**
      * Units: available units are c, f, k.
      *
@@ -57,20 +55,18 @@ class WeatherClient
         'k' => 'standard',
     ];
 
-    protected $uom;
-
-    protected $format;
+    protected $config;
 
 
     public function __construct()
     {
-        self::setApi();
         self::setConfigParameters();
+        self::setApi();
     }
 
     protected function setApi()
     {
-        $this->api_key = config('openweather.api_key');
+        $this->api_key = $this->config['api_key'];
         if ($this->api_key == '') {
             throw InvalidConfiguration::apiKeyNotSpecified();
         }
@@ -79,9 +75,7 @@ class WeatherClient
 
     protected function setConfigParameters()
     {
-        $this->format = (object) config('openweather');
-        $this->format->dt_format = $this->format->date_format . ' ' . $this->format->time_format;
-        $this->uom = $this->units[$this->format->temp_format];
+        $this->config = config('openweather');
     }
 
     /**
@@ -94,8 +88,8 @@ class WeatherClient
     private function buildQueryString(array $params)
     {
         $params['appid'] = $this->api_key;
-        $params['units'] = $this->uom;
-        $params['lang'] = $this->format->lang;
+        $params['units'] = $this->units[$this->config['temp_format']];
+        $params['lang'] = $this->config['lang'];
 
         return http_build_query($params);
     }
