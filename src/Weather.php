@@ -80,7 +80,7 @@ class Weather
     {
         $data = (new WeatherClient)->client()->fetch($this->current, $query);
 
-        return (new WeatherFormat($this->format))->formatCurrent($data);
+        return (new WeatherFormat())->formatCurrent($data);
     }
 
     /**
@@ -95,7 +95,7 @@ class Weather
     {
         $data = (new WeatherClient)->client()->fetch($this->one_call, $query);
 
-        return (new WeatherFormat($this->format))->formatOneCall($data);
+        return (new WeatherFormat())->formatOneCall($data);
     }
 
     /**
@@ -110,7 +110,7 @@ class Weather
     {
         $data = (new WeatherClient)->client()->fetch($this->forecast, $query);
 
-        return (new WeatherFormat($this->format))->format3Hourly($data);
+        return (new WeatherFormat())->format3Hourly($data);
     }
 
     /**
@@ -125,7 +125,7 @@ class Weather
     {
         $data = (new WeatherClient)->client()->fetch($this->historical, $query);
 
-        return (new WeatherFormat($this->format))->formatHistorical($data);
+        return (new WeatherFormat())->formatHistorical($data);
     }
 
     /**
@@ -144,7 +144,7 @@ class Weather
     {
         $data = (new WeatherClient)->client()->fetch($this->air_pollution, $query);
 
-        return (new WeatherFormat($this->format))->formatAirPollution($data);
+        return (new WeatherFormat())->formatAirPollution($data);
     }
 
 
@@ -160,7 +160,6 @@ class Weather
     {
         return (new WeatherClient)->client('geo')->fetch($type, $query);
     }
-
 
     public function getCurrentByCity(string $city)
     {
