@@ -47,22 +47,28 @@ class WeatherFormat
 
         // modify date of minutely data
 
-        foreach ($res->minutely as $key => $val) {
-            $res->minutely[$key]->dt = $this->dt($val->dt, $tz);
+        if ($res->minutely) {
+            foreach ($res->minutely as $key => $val) {
+                $res->minutely[$key]->dt = $this->dt($val->dt, $tz);
+            }
         }
 
         // modify date of hourly data
 
-        foreach ($res->hourly as $key => $val) {
-            $res->hourly[$key]->dt = $this->dt($val->dt, $tz);
+        if ($res->hourly) {
+            foreach ($res->hourly as $key => $val) {
+                $res->hourly[$key]->dt = $this->dt($val->dt, $tz);
+            }
         }
 
         // modify date of daily data
 
-        foreach ($res->daily as $key => $val) {
-            $res->daily[$key]->dt = $this->dt($val->dt, $tz);
-            $res->daily[$key]->sunrise = $this->dt($val->sunrise, $tz);
-            $res->daily[$key]->sunset = $this->dt($val->sunset, $tz);
+        if ($res->daily) {
+            foreach ($res->daily as $key => $val) {
+                $res->daily[$key]->dt = $this->dt($val->dt, $tz);
+                $res->daily[$key]->sunrise = $this->dt($val->sunrise, $tz);
+                $res->daily[$key]->sunset = $this->dt($val->sunset, $tz);
+            }
         }
 
         return $res;
