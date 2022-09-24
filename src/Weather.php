@@ -14,7 +14,7 @@ class Weather
 {
     public function getCurrentByCity(string $city)
     {
-        if (!is_numeric($city)) {
+        if (! is_numeric($city)) {
             $params['q'] = $city;
         } else {
             $params['id'] = $city;
@@ -41,7 +41,7 @@ class Weather
 
     public function getCurrentTempByCity(string $city)
     {
-        if (!is_numeric($city)) {
+        if (! is_numeric($city)) {
             $params['q'] = $city;
         } else {
             $params['id'] = $city;
@@ -60,7 +60,7 @@ class Weather
 
     public function get3HourlyByCity(string $city)
     {
-        if (!is_numeric($city)) {
+        if (! is_numeric($city)) {
             $params['q'] = $city;
         } else {
             $params['id'] = $city;
@@ -128,10 +128,10 @@ class Weather
     }
 
     /**
-     * Access current weather data for any location on Earth including over 200,000 cities! 
-     * Open Weathe Map API collect and process weather data from different sources such as global 
+     * Access current weather data for any location on Earth including over 200,000 cities!
+     * Open Weathe Map API collect and process weather data from different sources such as global
      * and local weather models, satellites, radars and vast network of weather stations.
-     * 
+     *
      * Documentation : https://openweathermap.org/current.
      *
      * @param array $query
@@ -197,7 +197,7 @@ class Weather
      * Besides basic Air Quality Index, the API returns data about polluting gases, such as Carbon monoxide (CO), Nitrogen monoxide (NO),
      * Nitrogen dioxide (NO2), Ozone (O3),Sulphur dioxide (SO2), Ammonia (NH3), and particulates (PM2.5 and PM10).
      * Air pollution forecast is available for 5 days with hourly granularity.
-     * 
+     *
      * Documentation : https://openweathermap.org/api/air-pollution.
      *
      * @param array $query
@@ -213,9 +213,9 @@ class Weather
 
 
     /**
-     * Geocoding API is a simple tool that we have developed to ease the search for locations 
+     * Geocoding API is a simple tool that we have developed to ease the search for locations
      * while working with geographic names and coordinates.
-     * 
+     *
      * Documentation : https://openweathermap.org/api/geocoding-api.
      *
      * @param string $type

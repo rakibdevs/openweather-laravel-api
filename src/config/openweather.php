@@ -3,7 +3,7 @@
 return [
 
     /**
-     * Get a free Open Weather Map API key 
+     * Get a free Open Weather Map API key
      * https://openweathermap.org/price.
      *
      */
@@ -47,7 +47,7 @@ return [
 
     /**
      * Library Configuration
-     * 
+     *
      * https://openweathermap.org/current#multi
      *
      */
@@ -58,7 +58,7 @@ return [
     'day_format' => 'l',
 
     /**
-     * Unit Configuration 
+     * Unit Configuration
      * --------------------------------------
      * Available units are c, f, k. (k is default)
      *
