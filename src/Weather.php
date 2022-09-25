@@ -7,157 +7,11 @@ namespace RakibDevs\Weather;
  *
  * @package  openweather-laravel-api
  * @author   Md. Rakibul Islam <rakib1708@gmail.com>
- * @version  1.6
  * @since    2021-01-09
  */
 
 class Weather
 {
-    /**
-     * current weather api endpoint : https://api.openweathermap.org/data/2.5/weather.
-     * See documentation : https://openweathermap.org/current.
-     *
-     * @var string
-     */
-
-    protected $current = 'weather?';
-
-    /**
-     * onecall api endpoint : https://api.openweathermap.org/data/2.5/onecall.
-     * See documentation : https://openweathermap.org/api/one-call-api
-     *
-     * @var string
-     */
-
-    protected $one_call = 'onecall?';
-
-    /**
-     * hourly forecast 5 Days 3 hour api endpoint : https://api.openweathermap.org/data/2.5/forecast.
-     * See documentation : https://openweathermap.org/forecast5.
-     *
-     * @var string
-     */
-
-    protected $forecast = 'forecast?';
-
-    /**
-     * last 5 Days history api endpoint : https://api.openweathermap.org/data/2.5/onecall/timemachine.
-     * See documentation : https://openweathermap.org/api/one-call-api#history
-     *
-     * @var string
-     */
-
-    protected $historical = 'onecall/timemachine?';
-
-    /**
-     * air pollution api endpoint : https://api.openweathermap.org/data/2.5/air_pollution.
-     * See documentation : https://openweathermap.org/api/air-pollution.
-     *
-     * @var string
-     */
-
-    protected $air_pollution = 'air_pollution?';
-    /**
-     * temp_format available strings are c, f, k.
-     *
-     * @var string
-     */
-
-
-    /**
-     * Access current weather data for any location on Earth including over 200,000 cities! Open Weathe Map API collect and process weather data from different sources such as global and local weather models, satellites, radars and vast network of weather stations.
-     * documentation : https://openweathermap.org/current.
-     *
-     * @param array $query
-     *
-     */
-
-
-    private function getCurrent(array $query)
-    {
-        $data = (new WeatherClient)->client()->fetch($this->current, $query);
-
-        return (new WeatherFormat())->formatCurrent($data);
-    }
-
-    /**
-     * Make just one API call and get all your essential weather data for a specific location with OpenWeather One Call API.
-     * documentation : https://openweathermap.org/api/one-call-api.
-     *
-     * @param array $query
-     *
-     */
-
-    private function getOneCall(array $query)
-    {
-        $data = (new WeatherClient)->client()->fetch($this->one_call, $query);
-
-        return (new WeatherFormat())->formatOneCall($data);
-    }
-
-    /**
-     * 5 day forecast is available at any location or city. It includes weather forecast data with 3-hour step.
-     * documentation : https://openweathermap.org/forecast5.
-     *
-     * @param array $query
-     *
-     */
-
-    private function get3Hourly(array $query)
-    {
-        $data = (new WeatherClient)->client()->fetch($this->forecast, $query);
-
-        return (new WeatherFormat())->format3Hourly($data);
-    }
-
-    /**
-     * Historical weather data for the previous 5 days
-     * documentation : https://openweathermap.org/api/one-call-api#history.
-     *
-     * @param array $query
-     *
-     */
-
-    private function getHistorical(array $query)
-    {
-        $data = (new WeatherClient)->client()->fetch($this->historical, $query);
-
-        return (new WeatherFormat())->formatHistorical($data);
-    }
-
-    /**
-     * Air Pollution API concept
-     * Air Pollution API provides current, forecast and historical air pollution data for any coordinates on the globe
-     * Besides basic Air Quality Index, the API returns data about polluting gases, such as Carbon monoxide (CO), Nitrogen monoxide (NO),
-     * Nitrogen dioxide (NO2), Ozone (O3),Sulphur dioxide (SO2), Ammonia (NH3), and particulates (PM2.5 and PM10).
-     * Air pollution forecast is available for 5 days with hourly granularity.
-     * documentation : https://openweathermap.org/api/air-pollution.
-     *
-     * @param array $query
-     *
-     */
-
-    private function getAirPollution(array $query)
-    {
-        $data = (new WeatherClient)->client()->fetch($this->air_pollution, $query);
-
-        return (new WeatherFormat())->formatAirPollution($data);
-    }
-
-
-    /**
-     * Geocoding API is a simple tool that we have developed to ease the search for locations while working with geographic names and coordinates.
-     * documentation : https://openweathermap.org/api/geocoding-api.
-     *
-     * @param array $query
-     *
-     */
-
-    private function getGeo(string $type, array $query)
-    {
-        return (new WeatherClient)->client('geo')->fetch($type, $query);
-    }
-
     public function getCurrentByCity(string $city)
     {
         if (! is_numeric($city)) {
@@ -271,5 +125,107 @@ class Weather
         }
 
         return $this->getGeo('reverse?', $params);
+    }
+
+    /**
+     * Access current weather data for any location on Earth including over 200,000 cities!
+     * Open Weathe Map API collect and process weather data from different sources such as global
+     * and local weather models, satellites, radars and vast network of weather stations.
+     *
+     * Documentation : https://openweathermap.org/current.
+     *
+     * @param array $query
+     *
+     */
+    private function getCurrent(array $query)
+    {
+        $ep = 'data/' . config('openweather.weather_api_version', '2.5') . '/weather?';
+
+        $data = (new WeatherClient)->client()->fetch($ep, $query);
+
+        return (new WeatherFormat())->formatCurrent($data);
+    }
+
+    /**
+     * Make just one API call and get all your essential weather data for a specific location with OpenWeather One Call API.
+     * documentation : https://openweathermap.org/api/one-call-api.
+     *
+     * @param array $query
+     *
+     */
+    private function getOneCall(array $query)
+    {
+        $ep = 'data/' . config('openweather.onecall_api_version', '2.5') . '/onecall?';
+        $data = (new WeatherClient)->client()->fetch($ep, $query);
+
+        return (new WeatherFormat())->formatOneCall($data);
+    }
+
+    /**
+     * 5 day forecast is available at any location or city. It includes weather forecast data with 3-hour step.
+     * documentation : https://openweathermap.org/forecast5.
+     *
+     * @param array $query
+     *
+     */
+    private function get3Hourly(array $query)
+    {
+        $ep = 'data/' . config('openweather.forecast_api_version', '2.5') . '/forecast?';
+        $data = (new WeatherClient)->client()->fetch($ep, $query);
+
+        return (new WeatherFormat())->format3Hourly($data);
+    }
+
+    /**
+     * Historical weather data for the previous 5 days
+     * documentation : https://openweathermap.org/api/one-call-api#history.
+     *
+     * @param array $query
+     *
+     */
+    private function getHistorical(array $query)
+    {
+        $ep = 'data/' . config('openweather.historical_api_version', '2.5') . '/onecall/timemachine?';
+        $data = (new WeatherClient)->client()->fetch($ep, $query);
+
+        return (new WeatherFormat())->formatHistorical($data);
+    }
+
+    /**
+     * Air Pollution API concept
+     * Air Pollution API provides current, forecast and historical air pollution data for any coordinates on the globe
+     * Besides basic Air Quality Index, the API returns data about polluting gases, such as Carbon monoxide (CO), Nitrogen monoxide (NO),
+     * Nitrogen dioxide (NO2), Ozone (O3),Sulphur dioxide (SO2), Ammonia (NH3), and particulates (PM2.5 and PM10).
+     * Air pollution forecast is available for 5 days with hourly granularity.
+     *
+     * Documentation : https://openweathermap.org/api/air-pollution.
+     *
+     * @param array $query
+     *
+     */
+    private function getAirPollution(array $query)
+    {
+        $ep = 'data/' . config('openweather.pollution_api_version', '2.5') . '/air_pollution?';
+        $data = (new WeatherClient)->client()->fetch($ep, $query);
+
+        return (new WeatherFormat())->formatAirPollution($data);
+    }
+
+
+    /**
+     * Geocoding API is a simple tool that we have developed to ease the search for locations
+     * while working with geographic names and coordinates.
+     *
+     * Documentation : https://openweathermap.org/api/geocoding-api.
+     *
+     * @param string $type
+     * @param array $query
+     *
+     */
+    private function getGeo(string $type, array $query)
+    {
+        $ep = 'geo/' . config('openweather.geo_api_version', '1.0') . '/' . $type;
+
+        return (new WeatherClient)->client()->fetch($ep, $query);
     }
 }

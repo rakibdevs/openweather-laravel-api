@@ -27,17 +27,7 @@ class WeatherClient
      * @var string
      */
 
-    protected $url = 'https://api.openweathermap.org/data/2.5/';
-
-    /**
-     * Geocoding API endpoint : http://api.openweathermap.org/geo/1.0/.
-     * See documentation : https://openweathermap.org/api/geocoding-api.
-     *
-     * @var string
-     */
-
-    protected $geo_api_url = 'http://api.openweathermap.org/geo/1.0/';
-
+    protected $url = 'https://api.openweathermap.org/';
 
     protected $service;
 
@@ -45,8 +35,7 @@ class WeatherClient
      * Units: available units are c, f, k.
      *
      * For temperature in Fahrenheit (f) and wind speed in miles/hour, use units=imperial
-     * For temperature in Celsius (c) and wind speed in meter/sec, use units=metric
-     * Temperature in Kelvin (k) and wind speed in meter/sec is used by default, so there is no need to use the units parameter in the API call if you want this
+     * For temperature in Celsius (c) and wind speed in meter/sec, use units=metric\
      *
      * @var array
      */
@@ -96,11 +85,10 @@ class WeatherClient
     }
 
 
-    public function client($type = null)
+    public function client()
     {
-        $url = $type == 'geo' ? $this->geo_api_url : $this->url;
         $this->service = new Client([
-            'base_uri' => $url,
+            'base_uri' => $this->url,
             'timeout' => 10.0,
         ]);
 
