@@ -18,9 +18,9 @@ class WeatherFormat
      * @param string $timestamp, string $tz
      * @return string
      */
-    public function dt(string $timestamp, string $tz)
+    public function dt(string $timestamp, int $tz)
     {
-        return date($this->dateFormat, ($timestamp + $tz));
+        return date($this->dateFormat, $timestamp + $tz);
     }
 
     public function formatCurrent($res)
@@ -95,14 +95,22 @@ class WeatherFormat
     {
         $tz = $res->timezone_offset;
 
-        // modify date of current data
+        // Historical data response structure is different in One Call API v3.0
+        // timestamps returned
+        if (config('openweather.historical_api_version', '2.5') == '3.0') {
+            // modify date of current data
+            $res->data[0]->sunrise = $this->dt($res->data[0]->sunrise, $tz);
+            $res->data[0]->sunset = $this->dt($res->data[0]->sunset, $tz);
+            $res->data[0]->dt = $this->dt($res->data[0]->dt, $tz);
+            return $res;
+        }
 
+        // modify date of current data
         $res->current->sunrise = $this->dt($res->current->sunrise, $tz);
         $res->current->sunset = $this->dt($res->current->sunset, $tz);
         $res->current->dt = $this->dt($res->current->dt, $tz);
 
         // modify date of hourly data
-
         foreach ($res->hourly as $key => $val) {
             $res->hourly[$key]->dt = $this->dt($val->dt, $tz);
         }
