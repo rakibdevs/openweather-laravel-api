@@ -18,18 +18,17 @@ class WeatherFormat
      * @param string $timestamp, int $tz
      * @return string
      */
-    public function dt(string $timestamp, int $tz)
+    public function dt(string $timestamp)
     {
-        return date($this->dateFormat, $timestamp + $tz);
+        return date($this->dateFormat, $timestamp);
     }
 
     public function formatCurrent($res)
     {
-        $tz = $res->timezone;
         // modify date in given format
-        $res->sys->sunrise = $this->dt($res->sys->sunrise, $tz);
-        $res->sys->sunset = $this->dt($res->sys->sunset, $tz);
-        $res->dt = $this->dt($res->dt, $tz);
+        $res->sys->sunrise = date($this->dateFormat, $res->sys->sunrise);
+        $res->sys->sunset = date($this->dateFormat, $res->sys->sunset);
+        $res->dt = date($this->dateFormat, $res->dt);
 
         return $res;
     }
@@ -41,15 +40,15 @@ class WeatherFormat
 
         // modify date of current data
 
-        $res->current->sunrise = $this->dt($res->current->sunrise, $tz);
-        $res->current->sunset = $this->dt($res->current->sunset, $tz);
-        $res->current->dt = $this->dt($res->current->dt, $tz);
+        $res->current->sunrise = date($this->dateFormat, $res->current->sunrise);
+        $res->current->sunset = date($this->dateFormat, $res->current->sunset);
+        $res->current->dt = date($this->dateFormat, $res->current->dt);
 
         // modify date of minutely data
 
         if ($res->minutely) {
             foreach ($res->minutely as $key => $val) {
-                $res->minutely[$key]->dt = $this->dt($val->dt, $tz);
+                $res->minutely[$key]->dt = date($this->dateFormat, $val->dt);
             }
         }
 
@@ -57,7 +56,7 @@ class WeatherFormat
 
         if ($res->hourly) {
             foreach ($res->hourly as $key => $val) {
-                $res->hourly[$key]->dt = $this->dt($val->dt, $tz);
+                $res->hourly[$key]->dt = date($this->dateFormat, $val->dt);
             }
         }
 
@@ -65,9 +64,9 @@ class WeatherFormat
 
         if ($res->daily) {
             foreach ($res->daily as $key => $val) {
-                $res->daily[$key]->dt = $this->dt($val->dt, $tz);
-                $res->daily[$key]->sunrise = $this->dt($val->sunrise, $tz);
-                $res->daily[$key]->sunset = $this->dt($val->sunset, $tz);
+                $res->daily[$key]->dt = date($this->dateFormat, $val->dt);
+                $res->daily[$key]->sunrise = date($this->dateFormat, $val->sunrise);
+                $res->daily[$key]->sunset = date($this->dateFormat, $val->sunset);
             }
         }
 
@@ -79,13 +78,13 @@ class WeatherFormat
         $tz = $res->city->timezone;
 
         // modify date in given format
-        $res->city->sunrise = $this->dt($res->city->sunrise, $tz);
-        $res->city->sunset = $this->dt($res->city->sunset, $tz);
+        $res->city->sunrise = date($this->dateFormat, $res->city->sunrise);
+        $res->city->sunset = date($this->dateFormat, $res->city->sunset);
 
         // modify date of list data
 
         foreach ($res->list as $key => $val) {
-            $res->list[$key]->dt = $this->dt($val->dt, $tz);
+            $res->list[$key]->dt = date($this->dateFormat, $val->dt);
         }
 
         return $res;
@@ -99,20 +98,20 @@ class WeatherFormat
         // timestamps returned
         if (config('openweather.historical_api_version', '2.5') == '3.0') {
             // modify date of current data
-            $res->data[0]->sunrise = $this->dt($res->data[0]->sunrise, $tz);
-            $res->data[0]->sunset = $this->dt($res->data[0]->sunset, $tz);
-            $res->data[0]->dt = $this->dt($res->data[0]->dt, $tz);
+            $res->data[0]->sunrise = date($this->dateFormat, $res->data[0]->sunrise);
+            $res->data[0]->sunset = date($this->dateFormat, $res->data[0]->sunset);
+            $res->data[0]->dt = date($this->dateFormat, $res->data[0]->dt);
             return $res;
         }
 
         // modify date of current data
-        $res->current->sunrise = $this->dt($res->current->sunrise, $tz);
-        $res->current->sunset = $this->dt($res->current->sunset, $tz);
-        $res->current->dt = $this->dt($res->current->dt, $tz);
+        $res->current->sunrise = date($this->dateFormat, $res->current->sunrise);
+        $res->current->sunset = date($this->dateFormat, $res->current->sunset);
+        $res->current->dt = date($this->dateFormat, $res->current->dt);
 
         // modify date of hourly data
         foreach ($res->hourly as $key => $val) {
-            $res->hourly[$key]->dt = $this->dt($val->dt, $tz);
+            $res->hourly[$key]->dt = date($this->dateFormat, $val->dt);
         }
 
         return $res;
@@ -121,7 +120,7 @@ class WeatherFormat
     public function formatAirPollution($res)
     {
         foreach ($res->list as $key => $val) {
-            $res->list[$key]->dt = $this->dt($val->dt, 0);
+            $res->list[$key]->dt = date($this->dateFormat, $val->dt);
         }
 
         return $res;
