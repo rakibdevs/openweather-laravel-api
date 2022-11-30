@@ -15,7 +15,7 @@ class WeatherFormat
     /**
      * format date based on configuration.
      *
-     * @param string $timestamp, string $tz
+     * @param string $timestamp, int $tz
      * @return string
      */
     public function dt(string $timestamp, int $tz)
