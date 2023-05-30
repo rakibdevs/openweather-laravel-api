@@ -52,7 +52,7 @@ return [
      *
      */
 
-    'lang' => env('OPENWAETHER_API_LANG', 'en'),
+    'lang' => env('OPENWEATHER_API_LANG', 'en'),
     'date_format' => 'm/d/Y',
     'time_format' => 'h:i A',
     'day_format' => 'l',
