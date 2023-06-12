@@ -49,8 +49,8 @@ Add the following to your `providers` array in `config/app.php`:
 ```
 Add API key and desired language in `.env`
 ```
-OPENWAETHER_API_KEY=
-OPENWAETHER_API_LANG=en
+OPENWEATHER_API_KEY=
+OPENWEATHER_API_LANG=en
 ```
 
 Publish the required package configuration file using the artisan command:
@@ -60,13 +60,13 @@ Publish the required package configuration file using the artisan command:
 Edit the `config/openweather.php` file and modify the `api_key` value with your Open Weather Map api key.
 ```php
 	return [
-	    'api_key' 	        => env('OPENWAETHER_API_KEY', ''),
+	    'api_key' 	        => env('OPENWEATHER_API_KEY', ''),
     	    'onecall_api_version' => '2.5',
             'historical_api_version' => '2.5',
             'forecast_api_version' => '2.5',
             'polution_api_version' => '2.5',
             'geo_api_version' => '1.0',
-	    'lang' 		=> env('OPENWAETHER_API_LANG', 'en'),
+	    'lang' 		=> env('OPENWEATHER_API_LANG', 'en'),
 	    'date_format'       => 'm/d/Y',
 	    'time_format'       => 'h:i A',
 	    'day_format'        => 'l',

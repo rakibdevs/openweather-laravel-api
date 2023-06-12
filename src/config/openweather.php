@@ -8,7 +8,7 @@ return [
      *
      */
 
-    'api_key' => env('OPENWAETHER_API_KEY', ""),
+    'api_key' => env('OPENWEATHER_API_KEY', ""),
 
     /**
      * Current weather API endpoint : https://api.openweathermap.org/data/2.5/weather.
@@ -52,7 +52,7 @@ return [
      *
      */
 
-    'lang' => env('OPENWAETHER_API_LANG', 'en'),
+    'lang' => env('OPENWEATHER_API_LANG', 'en'),
     'date_format' => 'm/d/Y',
     'time_format' => 'h:i A',
     'day_format' => 'l',
