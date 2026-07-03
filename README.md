@@ -19,6 +19,13 @@
 | [Geocoding API](https://openweathermap.org/api/geocoding-api) | By geographic coordinates |
 
 
+## Requirements
+
+| Package version | PHP | Laravel |
+| --- | --- | --- |
+| `^2.0` | 8.0 – 8.4 | 8, 9, 10, 11, 12 |
+| `^1.0` (legacy) | 7.2 – 8.0 | 6, 7, 8 |
+
 ## Installation
 
 Install the package through [Composer](http://getcomposer.org).
@@ -52,6 +59,8 @@ Add API key and desired language in `.env`
 OPENWEATHER_API_KEY=
 OPENWEATHER_API_LANG=en
 ```
+> If your existing `.env` uses the older misspelled `OPENWAETHER_API_KEY` / `OPENWAETHER_API_LANG`,
+> those are still honored as a fallback, so no change is required to keep working.
 
 Publish the required package configuration file using the artisan command:
 ```
@@ -64,13 +73,15 @@ Edit the `config/openweather.php` file and modify the `api_key` value with your 
     	    'onecall_api_version' => '2.5',
             'historical_api_version' => '2.5',
             'forecast_api_version' => '2.5',
-            'polution_api_version' => '2.5',
+            'pollution_api_version' => '2.5',   // legacy misspelled 'polution_api_version' is still honored
             'geo_api_version' => '1.0',
 	    'lang' 		=> env('OPENWEATHER_API_LANG', 'en'),
 	    'date_format'       => 'm/d/Y',
 	    'time_format'       => 'h:i A',
 	    'day_format'        => 'l',
-	    'temp_format'       => 'c'         // c for celcius, f for farenheit, k for kelvin
+	    'temp_format'       => 'c',        // c for celcius, f for farenheit, k for kelvin
+	    'cache_enabled'     => env('OPENWEATHER_CACHE_ENABLED', false),
+	    'cache_ttl'         => env('OPENWEATHER_CACHE_TTL', 600),  // seconds
 	];
 ```
 
@@ -89,6 +100,80 @@ $info = $wt->getCurrentByCity('dhaka');    // Get current weather by city name
 
 
 ```
+
+#### Using the Facade (optional)
+The package auto-registers a `Weather` facade, so you can also call it statically:
+
+```php
+use RakibDevs\Weather\Facades\Weather;
+
+$info = Weather::getCurrentByCity('dhaka');
+```
+
+Or resolve it from the container / via dependency injection:
+
+```php
+$info = app('weather')->getCurrentByCity('dhaka');
+```
+
+#### Per-call options (optional)
+Override units or language for a single request without touching the config. These
+setters are fluent and reset automatically after each request:
+
+```php
+// c = metric, f = imperial, k = standard
+$info = $wt->units('f')->lang('bn')->getCurrentByCity('dhaka');
+```
+
+#### Response caching (optional)
+Enable caching in `config/openweather.php` (or via `.env`) to reduce API calls. It is
+**off by default**, so existing behavior is unchanged:
+
+```env
+OPENWEATHER_CACHE_ENABLED=true
+OPENWEATHER_CACHE_TTL=600
+```
+
+#### Fluent response (optional)
+By default every method returns the raw `stdClass` response (unchanged). Call `->fluent()`
+to get a `WeatherResponse` wrapper instead — it keeps the familiar property access
+(`$res->main->temp` still works) and adds dot-notation access, conversions and helpers.
+The flag applies to a single request and then resets:
+
+```php
+$res = $wt->fluent()->getCurrentByCity('dhaka');
+
+// backward-compatible property access still works
+$res->main->temp;
+
+// dot-notation access with default
+$res->get('main.temp');
+$res->get('weather.0.description', 'n/a');
+$res->has('wind.gust');
+
+// convenience getters (current-weather shape)
+$res->temperature();     // main.temp
+$res->feelsLike();       // main.feels_like
+$res->humidity();        // main.humidity
+$res->windSpeed();       // wind.speed
+$res->condition();       // weather.0.main
+$res->description();     // weather.0.description
+$res->city();            // name
+$res->country();         // sys.country
+$res->icon();            // weather.0.icon
+$res->iconUrl();         // https://openweathermap.org/img/wn/04d@2x.png
+
+// conversions & collections
+$res->toArray();
+$res->toJson();
+$res->raw();                       // the original stdClass, untouched
+$res->collect('list');             // Illuminate\Support\Collection (for list responses)
+
+// ArrayAccess (dot notation supported)
+$res['main.temp'];
+```
+
+`->fluent()` composes with the other setters, e.g. `$wt->fluent()->units('f')->getCurrentByCity('dhaka')`.
 
 ### [Current weather](https://openweathermap.org/current) 
 Access current weather data for any location on Earth including over 200,000 cities! [OpenWeather](https://openweathermap.org/) collect and process weather data from different sources such as global and local weather models, satellites, radars and vast network of weather stations

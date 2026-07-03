@@ -1,0 +1,29 @@
+{
+    "lat": 23.71,
+    "lon": 90.41,
+    "timezone": "Asia/Dhaka",
+    "timezone_offset": 21600,
+    "current": {
+        "dt": 1609459200,
+        "sunrise": 1609460000,
+        "sunset": 1609500000,
+        "temp": 25.99,
+        "humidity": 60
+    },
+    "minutely": [
+        { "dt": 1609459260, "precipitation": 0 },
+        { "dt": 1609459320, "precipitation": 0 }
+    ],
+    "hourly": [
+        { "dt": 1609462800, "temp": 24.5 },
+        { "dt": 1609466400, "temp": 23.9 }
+    ],
+    "daily": [
+        {
+            "dt": 1609480800,
+            "sunrise": 1609460000,
+            "sunset": 1609500000,
+            "temp": { "day": 26.1, "night": 18.3 }
+        }
+    ]
+}

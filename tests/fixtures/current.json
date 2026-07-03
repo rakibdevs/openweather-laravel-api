@@ -1,0 +1,12 @@
+{
+    "coord": { "lon": 90.4074, "lat": 23.7104 },
+    "weather": [ { "id": 721, "main": "Haze", "description": "haze", "icon": "50d" } ],
+    "main": { "temp": 25.99, "feels_like": 26.5, "temp_min": 25.99, "temp_max": 25.99, "pressure": 1013, "humidity": 60 },
+    "wind": { "speed": 2.06, "deg": 320 },
+    "dt": 1609459200,
+    "sys": { "country": "BD", "sunrise": 1609460000, "sunset": 1609500000 },
+    "timezone": 21600,
+    "id": 1185241,
+    "name": "Dhaka",
+    "cod": 200
+}

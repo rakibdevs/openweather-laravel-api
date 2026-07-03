@@ -8,7 +8,9 @@ return [
      *
      */
 
-    'api_key' => env('OPENWEATHER_API_KEY', ""),
+    // Prefer the correctly spelled OPENWEATHER_API_KEY, but fall back to the
+    // legacy misspelled OPENWAETHER_API_KEY so existing .env files keep working.
+    'api_key' => env('OPENWEATHER_API_KEY', env('OPENWAETHER_API_KEY', "")),
 
     /**
      * Current weather API endpoint : https://api.openweathermap.org/data/2.5/weather.
@@ -37,8 +39,11 @@ return [
     /**
      * Air pollution api endpoint : https://api.openweathermap.org/data/2.5/air_pollution.
      * See documentation : https://openweathermap.org/api/air-pollution.
+     *
+     * Note: `pollution_api_version` is the correctly spelled key. The legacy misspelled
+     * `polution_api_version` is still honored as a fallback for previously published configs.
      */
-    'polution_api_version' => '2.5',
+    'pollution_api_version' => '2.5',
 
     /**
      * Geocoding API: https://openweathermap.org/api/geocoding-api
@@ -52,7 +57,8 @@ return [
      *
      */
 
-    'lang' => env('OPENWEATHER_API_LANG', 'en'),
+    // Prefer OPENWEATHER_API_LANG, falling back to the legacy misspelled OPENWAETHER_API_LANG.
+    'lang' => env('OPENWEATHER_API_LANG', env('OPENWAETHER_API_LANG', 'en')),
     'date_format' => 'm/d/Y',
     'time_format' => 'h:i A',
     'day_format' => 'l',
@@ -67,4 +73,17 @@ return [
      */
 
     'temp_format' => 'c',
+
+    /**
+     * Response Caching (optional)
+     * --------------------------------------
+     * When enabled, successful API responses are cached using Laravel's cache store
+     * to reduce the number of outbound API calls. Disabled by default so behavior is
+     * unchanged for existing users.
+     *
+     * cache_ttl is expressed in seconds.
+     */
+
+    'cache_enabled' => env('OPENWEATHER_CACHE_ENABLED', false),
+    'cache_ttl' => env('OPENWEATHER_CACHE_TTL', 600),
 ];
