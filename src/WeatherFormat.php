@@ -15,12 +15,12 @@ class WeatherFormat
     /**
      * format date based on configuration.
      *
-     * @param string $timestamp, int $tz
+     * @param int|string $timestamp
      * @return string
      */
-    public function dt(string $timestamp)
+    public function dt($timestamp)
     {
-        return date($this->dateFormat, $timestamp);
+        return date($this->dateFormat, (int) $timestamp);
     }
 
     public function formatCurrent($res)
@@ -46,7 +46,7 @@ class WeatherFormat
 
         // modify date of minutely data
 
-        if ($res->minutely) {
+        if (isset($res->minutely) && $res->minutely) {
             foreach ($res->minutely as $key => $val) {
                 $res->minutely[$key]->dt = date($this->dateFormat, $val->dt);
             }
@@ -54,7 +54,7 @@ class WeatherFormat
 
         // modify date of hourly data
 
-        if ($res->hourly) {
+        if (isset($res->hourly) && $res->hourly) {
             foreach ($res->hourly as $key => $val) {
                 $res->hourly[$key]->dt = date($this->dateFormat, $val->dt);
             }
@@ -62,7 +62,7 @@ class WeatherFormat
 
         // modify date of daily data
 
-        if ($res->daily) {
+        if (isset($res->daily) && $res->daily) {
             foreach ($res->daily as $key => $val) {
                 $res->daily[$key]->dt = date($this->dateFormat, $val->dt);
                 $res->daily[$key]->sunrise = date($this->dateFormat, $val->sunrise);
@@ -101,6 +101,7 @@ class WeatherFormat
             $res->data[0]->sunrise = date($this->dateFormat, $res->data[0]->sunrise);
             $res->data[0]->sunset = date($this->dateFormat, $res->data[0]->sunset);
             $res->data[0]->dt = date($this->dateFormat, $res->data[0]->dt);
+
             return $res;
         }
 

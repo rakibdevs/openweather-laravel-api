@@ -1,0 +1,15 @@
+{
+    "lat": 23.71,
+    "lon": 90.41,
+    "timezone": "Asia/Dhaka",
+    "timezone_offset": 21600,
+    "data": [
+        {
+            "dt": 1609459200,
+            "sunrise": 1609460000,
+            "sunset": 1609500000,
+            "temp": 25.99,
+            "humidity": 60
+        }
+    ]
+}

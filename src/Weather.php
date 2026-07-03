@@ -2,6 +2,8 @@
 
 namespace RakibDevs\Weather;
 
+use GuzzleHttp\Client;
+
 /**
  * Laravel OpenWeather API (openweather-laravel-api) is a Laravel package to connect Open Weather Map APIs ( https://openweathermap.org/api ) and access free API services easily.
  *
@@ -12,6 +14,78 @@ namespace RakibDevs\Weather;
 
 class Weather
 {
+    /**
+     * Optional Guzzle client, primarily used for dependency injection and testing.
+     *
+     * @var \GuzzleHttp\Client|null
+     */
+    protected $httpClient;
+
+    /**
+     * Per-call configuration overrides (e.g. units, lang) applied to the next request.
+     *
+     * @var array
+     */
+    protected $overrides = [];
+
+    /**
+     * When true, the next response is returned as a fluent WeatherResponse instead of stdClass.
+     *
+     * @var bool
+     */
+    protected $fluent = false;
+
+    /**
+     * @param \GuzzleHttp\Client|null $httpClient
+     */
+    public function __construct(?Client $httpClient = null)
+    {
+        $this->httpClient = $httpClient;
+    }
+
+    /**
+     * Override the temperature/units format for the next request only.
+     * Accepts c (metric), f (imperial) or k (standard).
+     *
+     * @param string $unit
+     * @return $this
+     */
+    public function units(string $unit): self
+    {
+        $this->overrides['temp_format'] = $unit;
+
+        return $this;
+    }
+
+    /**
+     * Override the response language for the next request only.
+     *
+     * @param string $lang
+     * @return $this
+     */
+    public function lang(string $lang): self
+    {
+        $this->overrides['lang'] = $lang;
+
+        return $this;
+    }
+
+    /**
+     * Return the next response wrapped in a fluent WeatherResponse object
+     * (dot-notation access, toArray/toJson/collect, convenience getters).
+     * Property access such as $res->main->temp keeps working. Applies to a
+     * single request and then resets. By default responses stay stdClass.
+     *
+     * @param bool $fluent
+     * @return $this
+     */
+    public function fluent(bool $fluent = true): self
+    {
+        $this->fluent = $fluent;
+
+        return $this;
+    }
+
     public function getCurrentByCity(string $city)
     {
         if (! is_numeric($city)) {
@@ -94,7 +168,7 @@ class Weather
         ]);
     }
 
-    public function getAirPollutionByCord(string $lat, string $lon, string $start = null, string $end = null)
+    public function getAirPollutionByCord(string $lat, string $lon, ?string $start = null, ?string $end = null)
     {
         return $this->getAirPollution([
             'lat' => $lat,
@@ -104,7 +178,7 @@ class Weather
         ]);
     }
 
-    public function getGeoByCity(string $city, string  $limit = null)
+    public function getGeoByCity(string $city, ?string $limit = null)
     {
         $params['q'] = $city;
         if ($limit) {
@@ -114,7 +188,7 @@ class Weather
         return $this->getGeo('direct?', $params);
     }
 
-    public function getGeoByCord(string $lat, string $lon, string $limit = null)
+    public function getGeoByCord(string $lat, string $lon, ?string $limit = null)
     {
         $params = [
             'lat' => $lat,
@@ -125,6 +199,35 @@ class Weather
         }
 
         return $this->getGeo('reverse?', $params);
+    }
+
+    /**
+     * Build a WeatherClient carrying any per-call overrides and the (optional) injected
+     * Guzzle client, then reset the overrides so they only apply to a single request.
+     *
+     * @return \RakibDevs\Weather\WeatherClient
+     */
+    protected function makeClient(): WeatherClient
+    {
+        $client = new WeatherClient($this->overrides, $this->httpClient);
+        $this->overrides = [];
+
+        return $client;
+    }
+
+    /**
+     * Wrap the response in a WeatherResponse when fluent mode was requested for this
+     * call, then reset the flag so it only affects a single request.
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    protected function respond($data)
+    {
+        $fluent = $this->fluent;
+        $this->fluent = false;
+
+        return $fluent ? new WeatherResponse($data) : $data;
     }
 
     /**
@@ -141,9 +244,9 @@ class Weather
     {
         $ep = 'data/' . config('openweather.weather_api_version', '2.5') . '/weather?';
 
-        $data = (new WeatherClient)->client()->fetch($ep, $query);
+        $data = $this->makeClient()->client()->fetch($ep, $query);
 
-        return (new WeatherFormat())->formatCurrent($data);
+        return $this->respond((new WeatherFormat())->formatCurrent($data));
     }
 
     /**
@@ -156,9 +259,9 @@ class Weather
     private function getOneCall(array $query)
     {
         $ep = 'data/' . config('openweather.onecall_api_version', '2.5') . '/onecall?';
-        $data = (new WeatherClient)->client()->fetch($ep, $query);
+        $data = $this->makeClient()->client()->fetch($ep, $query);
 
-        return (new WeatherFormat())->formatOneCall($data);
+        return $this->respond((new WeatherFormat())->formatOneCall($data));
     }
 
     /**
@@ -171,9 +274,9 @@ class Weather
     private function get3Hourly(array $query)
     {
         $ep = 'data/' . config('openweather.forecast_api_version', '2.5') . '/forecast?';
-        $data = (new WeatherClient)->client()->fetch($ep, $query);
+        $data = $this->makeClient()->client()->fetch($ep, $query);
 
-        return (new WeatherFormat())->format3Hourly($data);
+        return $this->respond((new WeatherFormat())->format3Hourly($data));
     }
 
     /**
@@ -186,9 +289,9 @@ class Weather
     private function getHistorical(array $query)
     {
         $ep = 'data/' . config('openweather.historical_api_version', '2.5') . '/onecall/timemachine?';
-        $data = (new WeatherClient)->client()->fetch($ep, $query);
+        $data = $this->makeClient()->client()->fetch($ep, $query);
 
-        return (new WeatherFormat())->formatHistorical($data);
+        return $this->respond((new WeatherFormat())->formatHistorical($data));
     }
 
     /**
@@ -205,10 +308,15 @@ class Weather
      */
     private function getAirPollution(array $query)
     {
-        $ep = 'data/' . config('openweather.pollution_api_version', '2.5') . '/air_pollution?';
-        $data = (new WeatherClient)->client()->fetch($ep, $query);
+        // Prefer the correctly spelled key, but fall back to the historical
+        // misspelled `polution_api_version` so previously published configs keep working.
+        $version = config('openweather.pollution_api_version')
+            ?? config('openweather.polution_api_version')
+            ?? '2.5';
+        $ep = 'data/' . $version . '/air_pollution?';
+        $data = $this->makeClient()->client()->fetch($ep, $query);
 
-        return (new WeatherFormat())->formatAirPollution($data);
+        return $this->respond((new WeatherFormat())->formatAirPollution($data));
     }
 
 
@@ -226,6 +334,6 @@ class Weather
     {
         $ep = 'geo/' . config('openweather.geo_api_version', '1.0') . '/' . $type;
 
-        return (new WeatherClient)->client()->fetch($ep, $query);
+        return $this->respond($this->makeClient()->client()->fetch($ep, $query));
     }
 }
