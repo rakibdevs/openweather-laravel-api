@@ -116,7 +116,7 @@ class WeatherApiTest extends TestCase
         $this->assertSame(date('m/d/Y h:i A', 1609460000), $res->data[0]->sunrise);
     }
 
-    public function test_it_gets_air_pollution_and_honors_correct_config_key()
+    public function test_air_pollution_with_a_date_range_hits_the_history_endpoint()
     {
         config()->set('openweather.pollution_api_version', '2.5');
         $wt = $this->fakeWeather([$this->jsonResponse('air_pollution.json')]);
@@ -124,10 +124,24 @@ class WeatherApiTest extends TestCase
         $res = $wt->getAirPollutionByCord('23.71', '90.41', '2021-01-01', '2021-01-02');
 
         $query = $this->lastQuery();
-        $this->assertStringContainsString('data/2.5/air_pollution', $this->lastUri());
-        $this->assertArrayHasKey('start', $query);
-        $this->assertArrayHasKey('end', $query);
+        $this->assertStringContainsString('data/2.5/air_pollution/history', $this->lastUri());
+        $this->assertSame((string) strtotime('2021-01-01'), $query['start']);
+        $this->assertSame((string) strtotime('2021-01-02'), $query['end']);
         $this->assertSame(date('m/d/Y h:i A', 1609459200), $res->list[0]->dt);
+    }
+
+    public function test_air_pollution_without_dates_hits_the_current_endpoint()
+    {
+        config()->set('openweather.pollution_api_version', '2.5');
+        $wt = $this->fakeWeather([$this->jsonResponse('air_pollution.json')]);
+
+        $wt->getAirPollutionByCord('23.71', '90.41');
+
+        $query = $this->lastQuery();
+        $this->assertStringContainsString('data/2.5/air_pollution?', $this->lastUri());
+        $this->assertStringNotContainsString('history', $this->lastUri());
+        $this->assertArrayNotHasKey('start', $query);
+        $this->assertArrayNotHasKey('end', $query);
     }
 
     public function test_air_pollution_falls_back_to_legacy_misspelled_config_key()

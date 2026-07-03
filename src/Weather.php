@@ -300,6 +300,8 @@ class Weather
      * Besides basic Air Quality Index, the API returns data about polluting gases, such as Carbon monoxide (CO), Nitrogen monoxide (NO),
      * Nitrogen dioxide (NO2), Ozone (O3),Sulphur dioxide (SO2), Ammonia (NH3), and particulates (PM2.5 and PM10).
      * Air pollution forecast is available for 5 days with hourly granularity.
+     * When a start/end range is provided the historical /air_pollution/history
+     * endpoint is used; otherwise the current /air_pollution endpoint is used.
      *
      * Documentation : https://openweathermap.org/api/air-pollution.
      *
@@ -313,7 +315,15 @@ class Weather
         $version = config('openweather.pollution_api_version')
             ?? config('openweather.polution_api_version')
             ?? '2.5';
-        $ep = 'data/' . $version . '/air_pollution?';
+
+        // The current-conditions endpoint ignores start/end and always returns "now".
+        // When a time range is supplied, OpenWeatherMap serves historical data from the
+        // dedicated /air_pollution/history endpoint (both start and end are required).
+        $route = (! empty($query['start']) && ! empty($query['end']))
+            ? 'air_pollution/history'
+            : 'air_pollution';
+
+        $ep = 'data/' . $version . '/' . $route . '?';
         $data = $this->makeClient()->client()->fetch($ep, $query);
 
         return $this->respond((new WeatherFormat())->formatAirPollution($data));

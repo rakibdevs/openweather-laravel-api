@@ -38,6 +38,9 @@ to work without code changes.
   bodies instead of returning `null` (prevents downstream "read property on null" errors).
 
 ### Fixed
+- `getAirPollutionByCord()` with a start/end range now queries the historical
+  `/air_pollution/history` endpoint instead of the current-conditions endpoint, which
+  ignored the range and returned only current data.
 - PHP 8.4 implicit-nullable deprecations: `getAirPollutionByCord()`, `getGeoByCity()` and
   `getGeoByCord()` now declare explicit `?string` parameters.
 - `WeatherFormat` no longer emits warnings when optional One Call blocks (`minutely`/`hourly`/

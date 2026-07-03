@@ -288,8 +288,12 @@ Air pollution forecast is available for 5 days with hourly granularity. Historic
 
 ```php
 
-// By coordinates : latitude, longitude and date
+// Current air pollution by coordinates
 $info = $wt->getAirPollutionByCord(23.7104, 90.4074);
+
+// Historical air pollution for a time range (both start and end required).
+// This queries the /air_pollution/history endpoint and returns hourly data.
+$info = $wt->getAirPollutionByCord(23.7104, 90.4074, '2023-01-01 00:00:00', '2023-01-03 00:00:00');
 
 ```
 
