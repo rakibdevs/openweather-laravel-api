@@ -7,16 +7,15 @@ on:
     branches: [ master ]
 
 jobs:
+  # Full behavioral test suite. Runs on the PHP versions for which a supported,
+  # security-advisory-clean Laravel/Testbench exists (Laravel 11/12 need PHP 8.2+).
   test:
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.0', '8.1', '8.2', '8.3', '8.4']
-
-    name: PHP ${{ matrix.php }}
-
+        php: ['8.2', '8.3', '8.4']
+    name: Tests - PHP ${{ matrix.php }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -44,6 +43,34 @@ jobs:
 
       - name: Run test suite (fail on deprecations)
         run: php -d error_reporting=E_ALL vendor/bin/phpunit
+
+  # PHP 8.0 / 8.1 are supported at runtime (guzzle + illuminate/support ^8),
+  # but the Testbench test toolchain there requires EOL Laravel (8/9/10) whose
+  # releases are blocked by security advisories. So on these versions we verify
+  # the shipped code is syntax-compatible and that composer metadata is valid.
+  compat:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.0', '8.1']
+    name: Compat - PHP ${{ matrix.php }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: json, mbstring
+          coverage: none
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Lint sources against PHP ${{ matrix.php }}
+        run: find src -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
 
   static-analysis:
     runs-on: ubuntu-latest
